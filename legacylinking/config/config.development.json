@@ -1,0 +1,8 @@
+{
+    "databaseConfig": {
+        "host": "mongodb",
+        "database": "petsDB"
+    }
+}
+
+ 

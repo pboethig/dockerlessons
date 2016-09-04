@@ -1,0 +1,106 @@
+    # 1. Update config values (localhost --> mongo and localhost --> redis) in config.development.json
+    # 2. Set APP_ENV environment variable to proper value in Dockerfile-redis (default is "development")
+    # mac users    
+    #     export APP_ENV=development
+    #windows 
+    # in powershell
+    #     $env:APP_ENV="development"
+    # or in cmd
+    #     set APP_ENV="development"
+    # 3. Run docker-compose build
+    # 4. Run docker-compose up
+    # 5. Live long and prosper
+    
+version: "2"
+ 
+services:
+    nginx:
+      container_name: nginx
+      build: 
+        context: .
+        dockerfile: .docker/docker-nginx.dockerfile
+      links:
+        - node1:node1
+        - node2:node2
+        - node3:node3
+      ports:
+        - "80:80"
+        - "443:443"
+      env_file:
+        - ./.docker/env/app.${APP_ENV}.env
+      networks:
+        - btree-network
+        
+    node1:
+      container_name: node-btree-1
+      build: 
+        context: .
+        dockerfile: .docker/docker-node-btree.dockerfile
+      ports:
+      - "8080"
+      volumes:
+        - .:/var/www/btree
+      working_dir: /var/www/btree
+      env_file:
+        - ./.docker/env/app.${APP_ENV}.env
+      networks:
+        - btree-network
+      
+    node2:
+      container_name: node-btree-2
+      build: 
+        context: .
+        dockerfile: .docker/docker-node-btree.dockerfile
+      ports:
+      - "8080"
+      volumes:
+        - .:/var/www/btree
+      working_dir: /var/www/btree
+      env_file:
+        - ./.docker/env/app.${APP_ENV}.env
+      networks:
+        - btree-network
+      
+    node3:
+      container_name: node-btree-3
+      build: 
+        context: .
+        dockerfile: .docker/docker-node-btree.dockerfile
+      ports:
+      - "8080"
+      volumes:
+        - .:/var/www/btree
+      working_dir: /var/www/btree
+      env_file:
+        - ./.docker/env/app.${APP_ENV}.env
+      networks:
+        - btree-network
+      
+    mongo:
+      container_name: mongodb
+      build:
+        context: .
+        dockerfile: .docker/docker-mongo.dockerfile
+      ports:
+      - "27017:27017"
+      env_file:
+        - ./.docker/env/mongo.${APP_ENV}.env
+        - ./.docker/env/app.${APP_ENV}.env
+      networks:
+        - btree-network
+        
+    redis:
+      container_name: redis
+      build: 
+        context: .
+        dockerfile: .docker/docker-redis.dockerfile
+      ports:
+        - "6379"
+      env_file:
+        - ./.docker/env/app.${APP_ENV}.env
+      networks:
+        - btree-network
+        
+networks:
+    btree-network:
+      driver: bridge
