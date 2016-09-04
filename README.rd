@@ -1,5 +1,6 @@
-**LegacyLinking**
-##To run the app with Node.js and MongoDB (without Docker):
+** LegacyLinking **
+
+To run the app with Node.js and MongoDB (without Docker):
 
 1. Install and start MongoDB (https://docs.mongodb.org/manual/installation).
 
