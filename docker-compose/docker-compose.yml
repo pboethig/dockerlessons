@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - "mongodb:27017:27017"
+    networks:
+       - nodeapp
+  node:
+    build: 
+       context: .
+       dockerfile: node.dockerfile
+    ports: 
+      - "8080:3000"    
+    networks:
+       - nodeapp
+
+  
+networks:
+  nodeapp:
+    driver: bridge

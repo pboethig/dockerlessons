@@ -1,0 +1,24 @@
+// this is a fix for the docker pus on windows
+// the login is OK and creates the ~/.docker/config.json file propery
+// with the following missing content that being https://registry-win-tp3.docker.io/v1/
+// so you need to add it to the config.json manually 
+// my hash should be in theere for index.docker from doing the command 
+// $ docker login 
+
+
+
+
+{
+    "auths": {
+        "https://index.docker.io/v1/": {
+            "auth": "myhash",
+            "email": "myemail"
+        },
+        "https://registry-win-tp3.docker.io/v1/": {
+            "auth": "myhash",
+            "email": "mydomain"         
+        }
+    }
+}
+
+

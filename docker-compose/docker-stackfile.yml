@@ -1,0 +1,57 @@
+#btree
+
+mongo:
+  image: 'btree/mongo:latest'
+  environment:
+    - MONGODB_DBNAME=ThePetRepublicDB
+    - MONGODB_PASSWORD=password
+    - MONGODB_ROLE=readWrite
+    - MONGODB_ROOT_PASSWORD=password
+    - MONGODB_ROOT_ROLE=root
+    - MONGODB_ROOT_USERNAME=dbadmin
+    - MONGODB_USERNAME=webrole
+  ports:
+    - '27017:27017'
+nginx:
+  image: 'btree/nginx:latest'
+  links:
+    - node1
+    - node2
+    - node3
+  ports:
+    - '80:80'
+    - '443:443'
+node1:
+  image: 'btree/btree-node:latest'
+  environment:
+    - NODE_ENV=production
+  links:
+    - mongo
+    - redis
+  ports:
+    - '8080'
+  working_dir: /var/www/thepetrepublic
+node2:
+  image: 'btree/btree-node:latest'
+  environment:
+    - NODE_ENV=production
+  links:
+    - mongo
+    - redis
+  ports:
+    - '8080'
+  working_dir: /var/www/thepetrepublic
+node3:
+  image: 'btree/btree-node:latest'
+  environment:
+    - NODE_ENV=production
+  links:
+    - mongo
+    - redis
+  ports:
+    - '8080'
+  working_dir: /var/www/thepetrepublic
+redis:
+  image: 'btree/redis:latest'
+  ports:
+    - '6379'
