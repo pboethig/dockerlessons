@@ -1,0 +1,13 @@
+{
+  "version": "2",
+  "network": null,
+  "service": {
+    "node": {
+      "dockerfile": "node.dockerfile",
+      "build": null,
+      "context": ".",
+      "ports": "8080:3000"
+    },
+    "mongdb": null
+  }
+}

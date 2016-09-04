@@ -19,12 +19,39 @@ var database = function () {
             options.server.socketOptions = options.replset.socketOptions = { keepAlive: 1 };
             
             mongoose.connect('mongodb://' + config.host + '/' + config.database, options);
-            conn = mongoose.connection;
-            conn.on('error', console.error.bind(console, 'connection error:'));
-            conn.once('open', function() {
-                console.log('db connection open');
+            
+            var db = mongoose.connection;
+            var lastReconnectAttempt; //saves the timestamp of the last reconnect attempt
+            
+            db.on('error', function(error) 
+            {
+                console.error('Error in MongoDb connection: ' + error);
+                mongoose.disconnect();
             });
-            return conn;
+
+            db.on('disconnected', function() {
+                console.log('MongoDB disconnected!');
+                var now = new Date().getTime();
+                // check if the last reconnection attempt was too early
+                if (lastReconnectAttempt && now-lastReconnectAttempt<5000) {
+                    // if it does, delay the next attempt
+                    var delay = 5000-(now-lastReconnectAttempt);
+                    console.log('reconnecting to MongoDB in ' + delay + "mills");
+                    setTimeout(function() {
+                        console.log('reconnecting to MongoDB');
+                        lastReconnectAttempt=new Date().getTime();
+                        mongoose.connect('mongodb://' + config.host + '/' + config.database, options);
+                    },delay);
+                }
+                else {
+                    console.log('reconnecting to MongoDB');
+                    lastReconnectAttempt=now;
+                    mongoose.connect('mongodb://' + config.host + '/' + config.database, options);
+                }
+            });    
+
+         return db;
+
         },
 
         close = function() {
