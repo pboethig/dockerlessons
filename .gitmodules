@@ -1,0 +1,3 @@
+[submodule "builsystem/docker-selenium"]
+	path = builsystem/docker-selenium
+	url = https://github.com/SeleniumHQ/docker-selenium.git
